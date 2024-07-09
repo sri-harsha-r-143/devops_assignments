@@ -1,0 +1,106 @@
+1.Create Nginx dockerfile:
+------------------------------------
+
+1.Set the base image to Ubuntu  
+2.Install Nginx
+3.Install necessary tools: vim wget curl net-tools
+4.Remove the default Nginx configuration file
+5.Copy a configuration file from the current directory
+6.Expose ports (80)
+7.Set the default command to execute when creating a new container
+
+
+2.Build the docker image and push it to dockerhub:
+----------------------------------------------------------------------
+Step 1: Building the Docker Image
+docker build -t harshar143/nginx-custom:latest .
+
+Step 2: Tag the Docker Image
+docker tag harshar143/nginx-custom:latest harshar143/nginx-custom:v1.0
+
+Step 3: Login to Docker Hub
+docker login
+
+Step 4: Push the Docker Image to Docker Hub
+docker push harshar143/nginx-custom:latest
+
+
+
+3.What is the difference between 'RUN', 'CMD', & 'ENTRYPOINT' in dockerfile?
+--------------------------------------------------------------------------------------------------------------
+
+1. RUN:
+   - Used to execute commands at build time.
+   - It runs during the image build process.
+   - Used to install software packages, set up configurations, and perform other tasks needed to set up the environment within the image.
+   - Example: in dockerfile
+     RUN apt-get update && apt-get install -y openjdk-11-jdk
+
+2. CMD:
+   - It specifies the default command to run when a container starts.
+   - It runs at container start time.
+   - Used to provide default arguments for the `ENTRYPOINT` or to specify the command to run if `ENTRYPOINT` is not defined.
+   - Example: in dockerfile
+     CMD ["java", "-jar", "app.jar"]
+     
+3. ENTRYPOINT:
+   - It configures a container that will run as an executable.
+   - It runs at container start time.
+   - It is used to define a command that will always run when the container starts, regardless of any command line arguments provided at runtime.
+   - Example: in dockerfile
+     ENTRYPOINT ["java", "-jar", "app.jar"]
+     
+4.How to remove container automatically after it exits?
+---------------------------------------------------------------------------
+
+docker run --rm -d -P ubuntu
+
+
+5.How to check which containers are connected to a network?
+-------------------------------------------------------------------------------------
+We can use the "docker network inspect <network_name>" command. This command provides detailed information about the network, including the containers that are connected to it.
+
+>>>Steps to Check Containers Connected to a Network
+
+1. List all networks:
+   docker network ls
+
+2. Inspect a specific network:
+docker network inspect <network_name>
+
+
+6.How to check container ip address?
+---------------------------------------------------
+
+docker inspect container_name
+
+7.How to create custom bridge network?
+----------------------------------------------------------
+
+docker network create --driver bridge myNetwork
+
+8.How to associate a container with a network?
+-----------------------------------------------------------------
+
+docker run -d --name my_container --network myNetwork nginx
+
+
+9.How to get persistent storage?
+----------------------------------------------
+
+To achieve persistent storage in Docker, we use volumes and bind mounts. These methods allow data to persist beyond the lifecycle of a container.
+
+>>>Volumes : are managed by Docker and are the preferred mechanism for persisting data.
+
+- command to a Volume:
+docker volume create volume_name
+
+- we can bind this volume to a directory in a container using the -v option:
+docker run -d -v volume_name:/path/in/container myimage
+
+>>>Bind Mounts : Bind mounts allow us to mount a directory or file from the host machine into the container.
+
+- we can bind a host directory to a container directory using the -v option with an absolute path:
+docker run -d -v /path/on/host:/path/in/container myimage
+
+
