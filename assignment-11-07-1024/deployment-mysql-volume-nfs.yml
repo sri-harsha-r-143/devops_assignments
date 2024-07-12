@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-deployment
+  labels:
+    app: mysql
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - name: mysql
+        image: mysql:8.4.1
+        ports:
+        - containerPort: 8080
+        env:
+        -name: mysqlsetup
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: mydb
+          MYSQL_USER: madhu
+
+        volumeMounts:
+        - name: nfs
+          mountPath: "/var/lib/mysql"
+      volumes:
+      - name: nfs
+        persistentVolumeClaim:
+          claimName: nfsclaim
+#Here we creted mysql deployment with a volume type nfs and required pv and pvc yml files are also created and configured
+#here we set default variable which require to setup mysql like user ,db, passwd
+#to configure use 
+#kubectl apply -f dep-mysql-volume-nfs.yml
+#to get deployment name use
+#kubectl get deployment
+#to delete a pod create new pod attach to volume and check volume is attached or not follow below commands
+#kubectl get pods
+#kubectl delete pod podname
+#to validate volume use 
+#kubectl exec pod pod_name and go to /var/lib/mysql which is our mounted path of the container
+
+
+   

@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wordpress-deployment
+  labels:
+    app: wordpress
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: wordpress
+  template:
+    metadata:
+      labels:
+        app: wordpress
+    spec:
+      containers:
+      - name: wordpress
+        image: wordpress:6.5.5-fpm-alpine
+        ports:
+        - containerPort: 8085
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+#In this wordpress yml file we requested resources and also added it to a service with the deployment labe app:wordpress
+#To create deployment use
+#kubectl apply -f wordpress-svc-deploy.yml
+#To get deployment name use
+#kubectl get deployment
+
+       
+
+   
